@@ -1,0 +1,12 @@
+#pragma kernel CSAddFloat
+
+RWStructuredBuffer<float> buffer;
+
+float a;
+float b;
+
+[numthreads(1, 1, 1)]
+void CSAddFloat (uint3 id : SV_DispatchThreadID)
+{
+    buffer[id.x] = a + b;
+}

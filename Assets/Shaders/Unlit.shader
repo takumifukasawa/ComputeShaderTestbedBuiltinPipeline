@@ -19,6 +19,7 @@ Shader "Unlit/Unlit"
             #pragma multi_compile_fog
 
             #include "UnityCG.cginc"
+            #include "Includes/Test.cginc"
 
             struct appdata
             {

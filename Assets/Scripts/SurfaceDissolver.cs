@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MaskColor : MonoBehaviour
+public class SurfaceDissolver : MonoBehaviour
 {
     [SerializeField]
     private Texture2D _srcTexture;
