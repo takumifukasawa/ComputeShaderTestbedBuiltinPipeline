@@ -7,7 +7,7 @@ float a;
 float b;
 
 /**
- * 2つの float を足し算する compute shader を操作する
+ * 2つの float を足し算する compute shader
  *
  */
 [numthreads(1, 1, 1)]

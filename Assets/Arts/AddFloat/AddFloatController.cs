@@ -79,7 +79,7 @@ public class AddFloatController : MonoBehaviour
         // -----------------------------------------------------------------
 
         _computeShader.SetFloat("a", _a);
-        _computeShader.SetFloat("b", _a);
+        _computeShader.SetFloat("b", _b);
 
         // -----------------------------------------------------------------
         // kernel index (kernelの場所) を指定して実行
