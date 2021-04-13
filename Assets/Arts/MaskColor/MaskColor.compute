@@ -1,7 +1,5 @@
 #pragma kernel CSMain
 
-#include "Includes/Test.cginc"
-
 RWTexture2D<float4> destTexture;
 Texture2D<float4> srcTexture;
 

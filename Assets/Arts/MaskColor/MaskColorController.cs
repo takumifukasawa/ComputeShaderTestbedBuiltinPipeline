@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MaskColor : MonoBehaviour
+public class MaskColorController : MonoBehaviour
 {
     [SerializeField]
     private Texture2D _srcTexture;
@@ -22,8 +22,6 @@ public class MaskColor : MonoBehaviour
     [SerializeField]
     private bool _A = true;
 
-    // private ComputeShader _maskColorComputeShader;
-
     private RenderTexture _destTexture;
 
     private MaterialPropertyBlock _materialPropertyBlock;
@@ -32,7 +30,6 @@ public class MaskColor : MonoBehaviour
 
     private int kernelID;
 
-    // Start is called before the first frame update
     void Start()
     {
         _destTexture = new RenderTexture(
@@ -44,8 +41,6 @@ public class MaskColor : MonoBehaviour
         _destTexture.enableRandomWrite = true;
         _destTexture.Create();
 
-        // _maskColorComputeShader = ComputeShader.Instantiate(Resources.Load<ComputeShader>("Shaders/MaskColor"));
-
         kernelID = _maskColorComputeShader.FindKernel("CSMain");
 
         _maskColorComputeShader.SetTexture(kernelID, "destTexture", _destTexture);
@@ -56,7 +51,6 @@ public class MaskColor : MonoBehaviour
         _materialPropertyBlock = new MaterialPropertyBlock();
     }
 
-    // Update is called once per frame
     void Update()
     {
         _maskColorComputeShader.SetInt("MaskR", _R ? 1 : 0);
@@ -70,13 +64,9 @@ public class MaskColor : MonoBehaviour
             _srcTexture.height,
             1
         );
-        // _maskColorComputeShader.Dispatch(kernelID, (int)(_srcTexture.width * 0.5), (int)(_srcTexture.height * 0.5), 1);
-        // _maskColorComputeShader.Dispatch(kernelID, 10, 10, 1);
 
         _meshRenderer.GetPropertyBlock(_materialPropertyBlock);
-
         _materialPropertyBlock.SetTexture("_MainTex", _destTexture);
-
         _meshRenderer.SetPropertyBlock(_materialPropertyBlock);
     }
 }

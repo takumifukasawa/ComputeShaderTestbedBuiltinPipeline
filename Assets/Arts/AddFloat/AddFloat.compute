@@ -1,10 +1,15 @@
 #pragma kernel CSAddFloat
 
+// 読み書き可能な buffer を宣言
 RWStructuredBuffer<float> buffer;
 
 float a;
 float b;
 
+/**
+ * 2つの float を足し算する compute shader を操作する
+ *
+ */
 [numthreads(1, 1, 1)]
 void CSAddFloat (uint3 id : SV_DispatchThreadID)
 {
