@@ -2,16 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BoxBlurController : MonoBehaviour
+public class CopyTextureController : MonoBehaviour
 {
     [SerializeField]
     private Texture2D _srcTexture;
 
     [SerializeField]
-    private ComputeShader _boxBlurComputeShader;
-
-    [SerializeField, Range(1, 10)]
-    private int _blurSize = 3;
+    private ComputeShader _copyTextureComputeShader;
 
     private RenderTexture _destTexture;
 
@@ -32,10 +29,10 @@ public class BoxBlurController : MonoBehaviour
         _destTexture.enableRandomWrite = true;
         _destTexture.Create();
 
-        kernelID = _boxBlurComputeShader.FindKernel("CSMain");
+        kernelID = _copyTextureComputeShader.FindKernel("CSMain");
 
-        _boxBlurComputeShader.SetTexture(kernelID, "destTexture", _destTexture);
-        _boxBlurComputeShader.SetTexture(kernelID, "srcTexture", _srcTexture);
+        _copyTextureComputeShader.SetTexture(kernelID, "destTexture", _destTexture);
+        _copyTextureComputeShader.SetTexture(kernelID, "srcTexture", _srcTexture);
 
         _meshRenderer = GetComponent<MeshRenderer>();
 
@@ -44,14 +41,10 @@ public class BoxBlurController : MonoBehaviour
 
     void Update()
     {
-        _boxBlurComputeShader.SetInt("BlurSize", _blurSize);
-        _boxBlurComputeShader.SetInt("TextureWidth", _srcTexture.width);
-        _boxBlurComputeShader.SetInt("TextureHeight", _srcTexture.height);
-
-        _boxBlurComputeShader.Dispatch(
+        _copyTextureComputeShader.Dispatch(
             kernelID,
-            _srcTexture.width,
-            _srcTexture.height,
+            _srcTexture.width / 2,
+            _srcTexture.height / 2,
             1
         );
 

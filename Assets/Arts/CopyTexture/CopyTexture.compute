@@ -1,0 +1,16 @@
+#pragma kernel CSMain
+
+RWTexture2D<float4> destTexture;
+Texture2D<float4> srcTexture;
+
+int MaskR;
+int MaskG;
+int MaskB;
+int MaskA;
+
+[numthreads(2,2,1)]
+void CSMain (uint2 id : SV_DispatchThreadID)
+{
+    float4 t = srcTexture[id];
+    destTexture[id] = t;
+}
