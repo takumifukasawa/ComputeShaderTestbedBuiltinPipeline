@@ -20,6 +20,10 @@ public class CopyTextureController : MonoBehaviour
 
     void Start()
     {
+        // ---------------------------------------------------------------------------
+        // create texture
+        // ---------------------------------------------------------------------------
+
         _destTexture = new RenderTexture(
             _srcTexture.width,
             _srcTexture.height,
@@ -29,10 +33,18 @@ public class CopyTextureController : MonoBehaviour
         _destTexture.enableRandomWrite = true;
         _destTexture.Create();
 
+        // ---------------------------------------------------------------------------
+        // compute shader
+        // ---------------------------------------------------------------------------
+
         kernelID = _copyTextureComputeShader.FindKernel("CSMain");
 
         _copyTextureComputeShader.SetTexture(kernelID, "destTexture", _destTexture);
         _copyTextureComputeShader.SetTexture(kernelID, "srcTexture", _srcTexture);
+
+        // ---------------------------------------------------------------------------
+        // init material property block
+        // ---------------------------------------------------------------------------
 
         _meshRenderer = GetComponent<MeshRenderer>();
 
@@ -41,12 +53,20 @@ public class CopyTextureController : MonoBehaviour
 
     void Update()
     {
+        // ---------------------------------------------------------------------------
+        // dispatch compute shader
+        // ---------------------------------------------------------------------------
+
         _copyTextureComputeShader.Dispatch(
             kernelID,
-            _srcTexture.width / 2,
-            _srcTexture.height / 2,
+            _srcTexture.width,
+            _srcTexture.height,
             1
         );
+
+        // ---------------------------------------------------------------------------
+        // set texture to material
+        // ---------------------------------------------------------------------------
 
         _meshRenderer.GetPropertyBlock(_materialPropertyBlock);
         _materialPropertyBlock.SetTexture("_MainTex", _destTexture);
