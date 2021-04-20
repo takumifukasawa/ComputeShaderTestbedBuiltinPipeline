@@ -34,7 +34,7 @@ public class CopyTextureController : MonoBehaviour
         _destTexture.Create();
 
         // ---------------------------------------------------------------------------
-        // compute shader
+        // init compute shader
         // ---------------------------------------------------------------------------
 
         kernelID = _copyTextureComputeShader.FindKernel("CSMain");

@@ -23,6 +23,10 @@ public class BoxBlurController : MonoBehaviour
 
     void Start()
     {
+        // ---------------------------------------------------------------------------
+        // create texture
+        // ---------------------------------------------------------------------------
+
         _destTexture = new RenderTexture(
             _srcTexture.width,
             _srcTexture.height,
@@ -32,10 +36,21 @@ public class BoxBlurController : MonoBehaviour
         _destTexture.enableRandomWrite = true;
         _destTexture.Create();
 
+        // ---------------------------------------------------------------------------
+        // init compute shader
+        // ---------------------------------------------------------------------------
+
         kernelID = _boxBlurComputeShader.FindKernel("CSMain");
 
         _boxBlurComputeShader.SetTexture(kernelID, "destTexture", _destTexture);
         _boxBlurComputeShader.SetTexture(kernelID, "srcTexture", _srcTexture);
+
+        _boxBlurComputeShader.SetInt("TextureWidth", _srcTexture.width);
+        _boxBlurComputeShader.SetInt("TextureHeight", _srcTexture.height);
+
+        // ---------------------------------------------------------------------------
+        // init material property block
+        // ---------------------------------------------------------------------------
 
         _meshRenderer = GetComponent<MeshRenderer>();
 
@@ -44,9 +59,11 @@ public class BoxBlurController : MonoBehaviour
 
     void Update()
     {
+        // ---------------------------------------------------------------------------
+        // dispatch compute shader
+        // ---------------------------------------------------------------------------
+
         _boxBlurComputeShader.SetInt("BlurSize", _blurSize);
-        _boxBlurComputeShader.SetInt("TextureWidth", _srcTexture.width);
-        _boxBlurComputeShader.SetInt("TextureHeight", _srcTexture.height);
 
         _boxBlurComputeShader.Dispatch(
             kernelID,
@@ -54,6 +71,10 @@ public class BoxBlurController : MonoBehaviour
             _srcTexture.height,
             1
         );
+
+        // ---------------------------------------------------------------------------
+        // set texture to material
+        // ---------------------------------------------------------------------------
 
         _meshRenderer.GetPropertyBlock(_materialPropertyBlock);
         _materialPropertyBlock.SetTexture("_MainTex", _destTexture);

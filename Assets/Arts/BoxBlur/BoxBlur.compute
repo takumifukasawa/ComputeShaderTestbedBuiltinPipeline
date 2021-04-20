@@ -10,29 +10,28 @@ uint BlurSize;
 [numthreads(1,1,1)]
 void CSMain (uint2 id : SV_DispatchThreadID)
 {
-    float4 t = srcTexture[id];
-
     float2 uv = float2(id.x, id.y);
 
     float blurSize = (float)BlurSize;
-    float blurKernelEdge = blurSize * 2 + 1;
-    float blurKernelSize = blurKernelEdge * blurKernelEdge;
+    float blurKernelEdge = blurSize * 2 + 1; // 取得する周辺ピクセルの一辺のサイズ
+    float blurKernelSize = blurKernelEdge * blurKernelEdge; // 取得する周辺ピクセルの数(サンプル数)
 
     float4 accColor;
 
     for(uint i = 0; i < (uint)blurKernelSize; i++) {
         float fi = (float)i;
+        // 取得するピクセルの位置をずらす
         float offsetX = fmod(fi, blurKernelEdge) - blurSize;
         float offsetY = floor((fi / blurKernelEdge)) - blurSize;
-        accColor += srcTexture[float2(uv.x + offsetX, uv.y + offsetY)];
+        // 周辺ピクセルの色を取得
+        float2 pickUV = float2(uv.x + offsetX, uv.y + offsetY);
+        float4 pickColor = srcTexture[pickUV];
+        // 合計
+        accColor += pickColor;
     }
 
+    // サンプル数で割って平均化
     accColor /= blurKernelSize;
 
-    destTexture[id] = float4(
-        accColor.x,
-        accColor.y,
-        accColor.z,
-        accColor.w
-    );
+    destTexture[id] = accColor;
 }
